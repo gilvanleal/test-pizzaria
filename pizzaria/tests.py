@@ -60,7 +60,7 @@ class PizzaTests(APITestCase):
         self.tamanhos = [
             {'nome': 'Pequena', 'valor': "20.00", 'tempo': 15},
             {'nome': 'Média', 'valor': "30.00", 'tempo': 20},
-            {'nome': 'Grande','valor': "40.00", 'tempo': 25}
+            {'nome': 'Grande', 'valor': "40.00", 'tempo': 25}
         ]
         self.sabores = [
             {'nome': 'Calabresa', 'valor': "0.00", 'tempo': 0},
@@ -112,6 +112,7 @@ class PizzaTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Pizza.objects.count(), 1)
 
+
 class PedidoTests(APITestCase):
     
     def setUp(self):
@@ -155,4 +156,4 @@ class PedidoTests(APITestCase):
         self.assertEqual(Pedido.objects.count(), 1)
         self.assertEqual(r_pedido.data['tempo'], 25)
         self.assertEqual(r_pedido.data['valor'], '35.00')
-    
+
