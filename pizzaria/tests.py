@@ -5,9 +5,9 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from .models import Pizza, Tamanho, Sabor, Personalizacao, Pedido
-from .serializers import PizzaSerializer, TamanhoSerializer, SaborSerializer
 
-class PropiedadeTests(APITestCase):
+
+class PropriedadeTests(APITestCase):
 
     def setUp(self):
         self.user = User.objects.create(username='uds_user', password='password')
@@ -19,18 +19,13 @@ class PropiedadeTests(APITestCase):
         self.sabores = [
             {'nome': 'Calabresa', 'valor': "0.00", 'tempo': 0},
             {'nome': 'Marguerita:', 'valor': "0.00",'tempo': 0},
-            {'nome': 'Portuguesa:', 'valor': "0.00",'tempo': 5}
+            {'nome': 'Portuguesa:','valor': "0.00",'tempo': 5}
         ]
-        self.personalizacao = [
+        self.observacao = [
             {'nome': 'Extra bacon', 'valor': "3.00", 'tempo': 0},
-            {'nome': 'Sem cebola:', 'valor': "0.00", 'tempo': 0},
-            {'nome': 'Borda recheada:', 'valor': "5.00", 'tempo': 5}
+            {'nome': 'Sem cebola:', 'valor': "0.00",'tempo': 0},
+            {'nome': 'Borda recheada:','valor': "5.00",'tempo': 5}
         ]
-
-        # self.pizza = {
-        #     'tamanho': reverse('tamanho-detail', args=[Tamanho.objects.create(**self.tamanhos[0]).id]),
-        #     'sabor': reverse('sabor-detail', args=[Sabor.objects.create(**self.sabores[0]).id]),
-        # }
 
     
     def create_propriedade(self, str_url, values, klass):
@@ -50,29 +45,29 @@ class PropiedadeTests(APITestCase):
     def test_create_sabor(self):
         self.create_propriedade('sabor-list', self.sabores, Sabor)
 
-    def test_create_personalizacao(self):
+    def test_create_observacao(self):
         
-        self.create_propriedade('personalizacao-list', self.personalizacao, Personalizacao)
+        self.create_propriedade('observacao-list', self.observacao, Personalizacao)
 
 
 class PizzaTests(APITestCase):
     def setUp(self):
         self.tamanhos = [
             {'nome': 'Pequena', 'valor': "20.00", 'tempo': 15},
-            {'nome': 'Média', 'valor': "30.00", 'tempo': 20},
-            {'nome': 'Grande', 'valor': "40.00", 'tempo': 25}
+            {'nome': 'Média', 'valor': "30.00",'tempo': 20},
+            {'nome': 'Grande','valor': "40.00",'tempo': 25}
         ]
         self.sabores = [
             {'nome': 'Calabresa', 'valor': "0.00", 'tempo': 0},
-            {'nome': 'Marguerita', 'valor': "0.00", 'tempo': 0},
-            {'nome': 'Portuguesa', 'valor': "0.00", 'tempo': 5}
+            {'nome': 'Marguerita', 'valor': "0.00",'tempo': 0},
+            {'nome': 'Portuguesa','valor': "0.00",'tempo': 5}
         ]
-        self.personalizacao = [
+        self.observacao = [
             {'nome': 'Extra bacon', 'valor': "3.00", 'tempo': 0},
             {'nome': 'Sem cebola', 'valor': "0.00",'tempo': 0},
             {'nome': 'Borda recheada','valor': "5.00",'tempo': 5}
         ]
-        for v, k in [(self.tamanhos, Tamanho), (self.sabores, Sabor), (self.personalizacao, Personalizacao)]:
+        for v, k in [(self.tamanhos, Tamanho), (self.sabores, Sabor), (self.observacao, Personalizacao)]:
             for p in v:
                 k.objects.create(**p)
 
@@ -92,7 +87,7 @@ class PizzaTests(APITestCase):
         data = {
             'tamanho': reverse('tamanho-detail', args=[Tamanho.objects.get(nome='Grande').id]),
             'sabor': reverse('sabor-detail', args=[Sabor.objects.get(nome='Calabresa').id]),
-            'personalizacao': [reverse('personalizacao-detail', args=[Personalizacao.objects.get(nome='Borda recheada').id])]
+            'observacao': [reverse('observacao-detail', args=[Personalizacao.objects.get(nome='Borda recheada').id])]
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -103,15 +98,14 @@ class PizzaTests(APITestCase):
         data = {
             'tamanho': reverse('tamanho-detail', args=[Tamanho.objects.get(nome='Grande').id]),
             'sabor': reverse('sabor-detail', args=[Sabor.objects.get(nome='Calabresa').id]),
-            'personalizacao': [
-                reverse('personalizacao-detail', args=[Personalizacao.objects.get(nome='Borda recheada').id]),
-                reverse('personalizacao-detail', args=[Personalizacao.objects.get(nome='Sem cebola').id]),
+            'observacao': [
+                reverse('observacao-detail', args=[Personalizacao.objects.get(nome='Borda recheada').id]),
+                reverse('observacao-detail', args=[Personalizacao.objects.get(nome='Sem cebola').id]),
                 ]
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Pizza.objects.count(), 1)
-
 
 class PedidoTests(APITestCase):
     
@@ -127,12 +121,12 @@ class PedidoTests(APITestCase):
             {'nome': 'Marguerita', 'valor': "0.00",'tempo': 0},
             {'nome': 'Portuguesa','valor': "0.00",'tempo': 5}
         ]
-        self.personalizacao = [
+        self.observacao = [
             {'nome': 'Extra bacon', 'valor': "3.00", 'tempo': 0},
             {'nome': 'Sem cebola', 'valor': "0.00",'tempo': 0},
             {'nome': 'Borda recheada', 'valor': "5.00",'tempo': 5}
         ]
-        for v, k in [(self.tamanhos, Tamanho), (self.sabores, Sabor), (self.personalizacao, Personalizacao)]:
+        for v, k in [(self.tamanhos, Tamanho), (self.sabores, Sabor), (self.observacao, Personalizacao)]:
             for p in v:
                 k.objects.create(**p)
 
@@ -140,9 +134,9 @@ class PedidoTests(APITestCase):
         pizza_data = {
             'tamanho': reverse('tamanho-detail', args=[Tamanho.objects.get(nome='Média').id]),
             'sabor': reverse('sabor-detail', args=[Sabor.objects.get(nome='Calabresa').id]),
-            'personalizacao': [
-                reverse('personalizacao-detail', args=[Personalizacao.objects.get(nome='Borda recheada').id]),
-                reverse('personalizacao-detail', args=[Personalizacao.objects.get(nome='Sem cebola').id]),
+            'observacao': [
+                reverse('observacao-detail', args=[Personalizacao.objects.get(nome='Borda recheada').id]),
+                reverse('observacao-detail', args=[Personalizacao.objects.get(nome='Sem cebola').id]),
                 ]
         }
         r_pizza = self.client.post(reverse('pizza-list'), pizza_data, format='json')
@@ -156,4 +150,3 @@ class PedidoTests(APITestCase):
         self.assertEqual(Pedido.objects.count(), 1)
         self.assertEqual(r_pedido.data['tempo'], 25)
         self.assertEqual(r_pedido.data['valor'], '35.00')
-
